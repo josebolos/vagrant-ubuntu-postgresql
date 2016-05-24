@@ -43,12 +43,20 @@ Vagrant.configure(2) do |config|
     end
 
     # Provisioning
-    # Install puppet using the shell provisioner
-    # So we can use puppet to provision the rest of the machine
-    config.vm.provision "shell", :inline => <<-SHELL
-        apt-get update
-        apt-get install -y puppet
-    SHELL
+    config.vm.provision :shell, :run => "always" do |shell|
+        shell.inline = %{
+            DEBIAN_FRONTEND=noninteractive apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y puppet
+            mkdir -p /etc/puppet/modules;
+            function install_module {
+                folder=`echo $1 | sed s/.*-//`
+                if [ ! -d /etc/puppet/modules/$folder ]; then
+                puppet module install $1
+                fi
+            }
+            install_module puppetlabs-postgresql
+        }
+    end
 
     # Provision everything else with puppet
     config.vm.provision "puppet" do |puppet|

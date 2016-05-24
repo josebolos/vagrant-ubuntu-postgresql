@@ -1,11 +1,7 @@
-package { 'postgresql' :
-    ensure => latest
-}
+node default {
+    class { 'postgresql::server': }
 
-
-service { 'postgresql' :
-    require => [
-        Package['postgresql']
-    ],
-    ensure => running
+    postgresql::server::role { 'vagrant':
+        password_hash => postgresql_password('vagrant', 'vagrant')
+    }
 }
