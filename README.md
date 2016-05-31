@@ -20,3 +20,5 @@ After the VM has finished booting and provisioning, you can access PostgreSQL on
 * Installs the [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) plugin, which upgrades the VirtualBox Guest Extensions to the latest version. This ensures compatibility with mounted drives.
 * Installs puppet using the shell provisioner.
 * Installs PostgreSQL using the puppet provisioner and the [puppetlabs/postgresql](https://forge.puppet.com/puppetlabs/postgresql) module.
+* Modifies `pg_hba.conf` so PostgreSQL listens to 192.168.33.20. This makes PostgreSQL accessible from outside the VM.
+* Creates a database and assigns the proper roles to the `vagrant` user. The name of the database is configurable on [manifests/default.pp](manifests/default.pp).
